@@ -14,7 +14,6 @@ const models = require('./models');
 // templating boilerplate setup
 
 app.use(express.static(path.join(__dirname, '/public')));
-app.use('/', routes);
 
 app.engine('html', nunjucks.render);
 app.set('view engine', 'html');
@@ -25,7 +24,9 @@ app.use(morgan('dev'));
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
-models.db.sync({force: true})
+app.use('/', routes);
+
+models.db.sync()
   .then(function () {
     console.log('All tables created!');
     app.listen(1337, function(){

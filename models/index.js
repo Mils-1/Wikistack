@@ -9,7 +9,7 @@ const Page = db.define('page', {
   },
   urlTitle: {
     type: Sequelize.STRING,
-    allowNull: false,
+    allowNull: false
   },
   content: {
     type: Sequelize.TEXT,
@@ -30,6 +30,22 @@ const Page = db.define('page', {
   }
 });
 
+Page.beforeValidate(page => {
+  page.urlTitle = generateUrlTitle(page.title);
+});
+
+// Page.hook('beforeValidate', (page, options) => {
+//   page.urlTitle = generateUrlTitle(page.title);
+// });
+
+function generateUrlTitle (title) {
+  if(title) {
+    return title.replace(/\s+/g, '_').replace(/\W/g, '');
+  } else {
+    return Math.random().toString(36).substring(2, 7);
+  }
+}
+
 const User = db.define('user', {
   name: {
     type: Sequelize.STRING,
@@ -44,9 +60,16 @@ const User = db.define('user', {
   }
 });
 
+
+
+
+
+
+
+
+
 module.exports = {
   Page: Page,
   User: User,
   db: db
 };
-
